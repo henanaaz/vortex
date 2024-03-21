@@ -34,6 +34,14 @@ void Warp::clear() {
     for (auto& reg : vreg_file_.at(i)) {
       reg = 0;
     }
+    //clear the tensorcore regs
+    for (int i = 0; i < 4; i++){
+      //for (int j = 0; j < 2; j++){
+        tcore_ireg_a[i] = 0;
+        tcore_ireg_b[i] = 0;
+        tcore_ireg_c[i] = 0;
+      //}
+    }
   }
 }
 

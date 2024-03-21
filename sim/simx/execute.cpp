@@ -1451,6 +1451,16 @@ void Warp::execute(const Instr &instr, pipeline_trace_t *trace) {
       std::abort();
     }
   } break;
+  case TCU: {
+    switch (func3) {
+      case 0: { //Matrix Load
+      }
+      case 1: { //Matrix Store
+      }
+      case 2: { //Matrix Multiply
+      }
+    }
+  } break;
   case VSET: {
     uint32_t VLEN = core_->arch().vsize() * 8;
     uint32_t VLMAX = (instr.getVlmul() * VLEN) / instr.getVsew();
