@@ -26,6 +26,7 @@ module VX_commit import VX_gpu_pkg::*; #(
     VX_commit_if.slave      fpu_commit_if [`ISSUE_WIDTH],
 `endif
     VX_commit_if.slave      sfu_commit_if [`ISSUE_WIDTH],
+    VX_commit_if.slave      tcu_commit_if [`ISSUE_WIDTH],
 
     // outputs
     VX_writeback_if.master  writeback_if  [`ISSUE_WIDTH],

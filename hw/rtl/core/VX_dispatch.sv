@@ -32,7 +32,8 @@ module VX_dispatch import VX_gpu_pkg::*; #(
 `ifdef EXT_F_ENABLE
     VX_dispatch_if.master   fpu_dispatch_if [`ISSUE_WIDTH],
 `endif
-    VX_dispatch_if.master   sfu_dispatch_if [`ISSUE_WIDTH] 
+    VX_dispatch_if.master   sfu_dispatch_if [`ISSUE_WIDTH],
+    VX_dispatch_if.master   tcu_dispatch_if [`ISSUE_WIDTH] 
 );
     `UNUSED_PARAM (CORE_ID)
 
@@ -110,6 +111,36 @@ module VX_dispatch import VX_gpu_pkg::*; #(
         );
     end
 
+///////TODO
+
+    // TCU dispatch
+
+    VX_operands_if tcu_operands_if[`ISSUE_WIDTH]();
+
+    for (genvar i = 0; i < `ISSUE_WIDTH; ++i) begin
+        assign tcu_operands_if[i].valid = operands_if[i].valid && (operands_if[i].data.ex_type == `EX_TCU);
+        assign tcu_operands_if[i].data = operands_if[i].data;
+
+        `RESET_RELAY (tcu_reset, reset);
+
+        VX_elastic_buffer #(
+            .DATAW   (DATAW),
+            .SIZE    (2),
+            .OUT_REG (2)
+        ) tcu_buffer (
+            .clk        (clk),
+            .reset      (tcu_reset),
+            .valid_in   (tcu_operands_if[i].valid),
+            .ready_in   (tcu_operands_if[i].ready),
+            .data_in    (`TO_DISPATCH_DATA(tcu_operands_if[i].data, last_active_tid[i])),           
+            .data_out   (tcu_dispatch_if[i].data),
+            .valid_out  (tcu_dispatch_if[i].valid),
+            .ready_out  (tcu_dispatch_if[i].ready)
+        );
+    end
+
+////////TODO END
+
     // FPU dispatch
 
 `ifdef EXT_F_ENABLE
@@ -169,6 +200,7 @@ module VX_dispatch import VX_gpu_pkg::*; #(
     for (genvar i = 0; i < `ISSUE_WIDTH; ++i) begin
         assign operands_if[i].ready = (alu_operands_if[i].ready && (operands_if[i].data.ex_type == `EX_ALU)) 
                                    || (lsu_operands_if[i].ready && (operands_if[i].data.ex_type == `EX_LSU))
+                                   || (tcu_operands_if[i].ready && (operands_if[i].data.ex_type == `EX_TCU))
                                 `ifdef EXT_F_ENABLE
                                    || (fpu_operands_if[i].ready && (operands_if[i].data.ex_type == `EX_FPU))
                                 `endif

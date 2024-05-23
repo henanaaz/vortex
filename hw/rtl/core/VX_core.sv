@@ -67,7 +67,13 @@ module VX_core import VX_gpu_pkg::*; #(
     VX_commit_if        fpu_commit_if[`ISSUE_WIDTH]();
 `endif
     VX_dispatch_if      sfu_dispatch_if[`ISSUE_WIDTH]();
-    VX_commit_if        sfu_commit_if[`ISSUE_WIDTH]();    
+    VX_commit_if        sfu_commit_if[`ISSUE_WIDTH]();
+
+    VX_dispatch_if      tcu_dispatch_if[`ISSUE_WIDTH]();
+    VX_commit_if        tcu_commit_if[`ISSUE_WIDTH]();
+    VX_lsu_to_csr_if    lsu_to_csr_if[`ISSUE_WIDTH]();
+    VX_tcu_to_lsu_if    tcu_to_lsu_if[`ISSUE_WIDTH](); 
+    VX_tcu_to_csr_if    tcu_to_csr_if[`ISSUE_WIDTH]();     
     
     VX_writeback_if     writeback_if[`ISSUE_WIDTH]();
 
@@ -173,9 +179,12 @@ module VX_core import VX_gpu_pkg::*; #(
     `ifdef EXT_F_ENABLE
         .fpu_dispatch_if(fpu_dispatch_if),
     `endif
-        .sfu_dispatch_if(sfu_dispatch_if)
+        .sfu_dispatch_if(sfu_dispatch_if),
+        .tcu_dispatch_if(tcu_dispatch_if) 
     );
 
+
+        
     VX_execute #(
         .CORE_ID (CORE_ID)
     ) execute (
@@ -204,6 +213,7 @@ module VX_core import VX_gpu_pkg::*; #(
         .alu_dispatch_if(alu_dispatch_if),
         .lsu_dispatch_if(lsu_dispatch_if),
         .sfu_dispatch_if(sfu_dispatch_if),
+        .tcu_dispatch_if(tcu_dispatch_if),
 
         .warp_ctl_if    (warp_ctl_if),
         .branch_ctl_if  (branch_ctl_if),
@@ -211,6 +221,7 @@ module VX_core import VX_gpu_pkg::*; #(
         .alu_commit_if  (alu_commit_if),
         .lsu_commit_if  (lsu_commit_if),
         .sfu_commit_if  (sfu_commit_if),
+        .tcu_commit_if  (tcu_commit_if),
 
         .sim_ebreak     (sim_ebreak)
     );    
@@ -227,6 +238,7 @@ module VX_core import VX_gpu_pkg::*; #(
         .fpu_commit_if  (fpu_commit_if),
     `endif
         .sfu_commit_if  (sfu_commit_if),
+        .tcu_commit_if  (tcu_commit_if),
         
         .writeback_if   (writeback_if),
         

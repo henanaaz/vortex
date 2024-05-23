@@ -34,7 +34,8 @@ module VX_issue #(
 `ifdef EXT_F_ENABLE
     VX_dispatch_if.master   fpu_dispatch_if [`ISSUE_WIDTH],
 `endif
-    VX_dispatch_if.master   sfu_dispatch_if [`ISSUE_WIDTH]
+    VX_dispatch_if.master   sfu_dispatch_if [`ISSUE_WIDTH],
+    VX_dispatch_if.master   tcu_dispatch_if [`ISSUE_WIDTH]
 );
     VX_ibuffer_if  ibuffer_if [`ISSUE_WIDTH]();
     VX_ibuffer_if  scoreboard_if [`ISSUE_WIDTH]();
@@ -93,7 +94,8 @@ module VX_issue #(
     `ifdef EXT_F_ENABLE
         .fpu_dispatch_if(fpu_dispatch_if),
     `endif
-        .sfu_dispatch_if(sfu_dispatch_if)
+        .sfu_dispatch_if(sfu_dispatch_if),
+        .tcu_dispatch_if(tcu_dispatch_if)
     ); 
 
 `ifdef DBG_SCOPE_ISSUE
