@@ -57,6 +57,7 @@
 `define EX_ALU          0
 `define EX_LSU          1
 `define EX_SFU          2
+`define EX_TCU          3
 `define EX_FPU          (`EX_SFU + `EXT_F_ENABLED)
 
 `define NUM_EX_UNITS    (3 + `EXT_F_ENABLED)

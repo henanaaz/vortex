@@ -90,10 +90,6 @@
 `define NUM_THREADS 4
 `endif
 
-`ifndef MATRIX_SIZE
-`define MATRIX_SIZE 4
-`endif
-
 `ifndef NUM_BARRIERS
 `define NUM_BARRIERS 4
 `endif
@@ -102,10 +98,6 @@
 `define SOCKET_SIZE `MIN(4, `NUM_CORES)
 `endif
 `define NUM_SOCKETS `UP(`NUM_CORES / `SOCKET_SIZE)
-
-`ifndef TC_SIZE
-`define TC_SIZE 2
-`endif
 
 `ifdef L2_ENABLE
     `define L2_ENABLED   1
@@ -268,16 +260,6 @@
 // Number of LSU units
 `ifndef NUM_LSU_LANES
 `define NUM_LSU_LANES   `MIN(`NUM_THREADS, 4)
-`endif
-
-// Number of TCU units
-`ifndef NUM_TCU_LANES
-`define NUM_TCU_LANES   1
-`endif
-
-// Number of TCU units
-`ifndef NUM_TCU_BLOCKS
-`define NUM_TCU_BLOCKS  `ISSUE_WIDTH
 `endif
 
 // Number of SFU units
